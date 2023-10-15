@@ -27,3 +27,8 @@
 Cypress.Commands.add('getDataTest', (selector) => { 
     return cy.get(`[data-test="${selector}"]`)
  })
+
+ Cypress.Commands.add('checkUrl',(id,route)=>{
+    cy.getDataTest(id).click()
+    cy.location('pathname').should('eq',route)
+ })
