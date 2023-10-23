@@ -4,8 +4,6 @@ describe("test examples", () => {
   });
 
   it("tests our subscribe form", () => {
-    //
-
     const links = [
       {
         id: "nav-why",
@@ -62,4 +60,54 @@ describe("test examples", () => {
     // cy.getDataTest("nav-practices").click();
     // cy.location("pathname").should("equal", "/best-practices");
   });
+
+  it("intercepts", () => {
+    cy.intercept("POST", "http://localhost:3000/examples", {
+      fixture: "example.json",
+    });
+    cy.getDataTest("post-btn").click();
+  });
+
+  it.only("grudges", () => {
+    cy.contains(/Add Some Grudges/i);
+
+    cy.getDataTest('clear-btn').should('not.exist')
+
+    cy.getDataTest("grudge-list").within(() => {
+      cy.get("li").should("have.length", 0);
+    });
+
+    cy.addGrudge('some grudge 1')
+
+    cy.getDataTest("grudge-list").within(() => {
+      cy.get("li").should("have.length", 1);
+    });
+
+    cy.addGrudge('some grudge 2')
+
+    cy.getDataTest("grudge-list").within(() => {
+      cy.get("li").should("have.length", 2);
+      cy.get('li').its(0).should('contain.text', 'some grudge 1')
+    });
+
+    cy.getDataTest('grudge-list').within(()=>{
+      cy.get('li').its(0).within(()=>{
+        cy.get('button').click()
+      })
+      cy.get('li').should('have.length',1)
+    })
+
+    cy.getDataTest('clear-btn').should('exist')
+
+    cy.get('h3').contains(/grudges/i)
+    cy.getDataTest('clear-btn').click()
+
+    cy.getDataTest('grudge-list').within(()=>{
+      cy.get('li').should('have.length',0)
+    })
+
+  });
+
+ 
+  
 });

@@ -32,3 +32,10 @@ Cypress.Commands.add('getDataTest', (selector) => {
     cy.getDataTest(id).click()
     cy.location('pathname').should('eq',route)
  })
+
+ Cypress.Commands.add('addGrudge',(text)=>{
+   cy.getDataTest("grudge-input").within(() => {
+      cy.get("input").type(text);
+    });
+    cy.getDataTest("add-grudge-btn").click();
+ })
